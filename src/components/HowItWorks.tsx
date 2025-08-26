@@ -100,7 +100,11 @@ const HowItWorks = () => {
           </div>
           
           <div className="text-center">
-            <Button variant="hero" size="lg">
+            <Button 
+              variant="hero" 
+              size="lg"
+              onClick={() => document.getElementById('opportunities')?.scrollIntoView({ behavior: 'smooth' })}
+            >
               Start Your Volunteer Journey
             </Button>
           </div>

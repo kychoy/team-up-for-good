@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Clock, Users, Heart } from "lucide-react";
+import { MapPin, Clock, Users, Heart, Check } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface OpportunityCardProps {
   title: string;
@@ -24,6 +26,29 @@ const OpportunityCard = ({
   volunteersNeeded,
   imageUrl,
 }: OpportunityCardProps) => {
+  const [isApplied, setIsApplied] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const { toast } = useToast();
+
+  const handleApply = () => {
+    if (!isApplied) {
+      setIsApplied(true);
+      toast({
+        title: "Application Submitted! 🎉",
+        description: `Your interest in "${title}" has been sent to ${organization}. They'll contact you soon!`,
+      });
+    }
+  };
+
+  const handleFavorite = () => {
+    setIsFavorited(!isFavorited);
+    toast({
+      title: isFavorited ? "Removed from favorites" : "Added to favorites! ❤️",
+      description: isFavorited ? 
+        `"${title}" removed from your saved opportunities.` :
+        `"${title}" saved to your favorites for later.`,
+    });
+  };
   return (
     <Card className="group hover:shadow-elegant transition-all duration-300 hover:-translate-y-1 border-border/50">
       {/* Image */}
@@ -35,8 +60,15 @@ const OpportunityCard = ({
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
           <div className="absolute top-4 right-4">
-            <Button variant="ghost" size="icon" className="bg-white/90 hover:bg-white text-primary">
-              <Heart className="w-4 h-4" />
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className={`bg-white/90 hover:bg-white transition-colors ${
+                isFavorited ? 'text-secondary' : 'text-primary'
+              }`}
+              onClick={handleFavorite}
+            >
+              <Heart className={`w-4 h-4 ${isFavorited ? 'fill-current' : ''}`} />
             </Button>
           </div>
         </div>
@@ -76,8 +108,20 @@ const OpportunityCard = ({
       </CardContent>
       
       <CardFooter className="pt-0">
-        <Button className="w-full" variant="default">
-          Apply Now
+        <Button 
+          className="w-full" 
+          variant={isApplied ? "secondary" : "default"}
+          onClick={handleApply}
+          disabled={isApplied}
+        >
+          {isApplied ? (
+            <>
+              <Check className="w-4 h-4 mr-2" />
+              Applied
+            </>
+          ) : (
+            "Apply Now"
+          )}
         </Button>
       </CardFooter>
     </Card>

@@ -38,10 +38,31 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button variant="hero" size="lg" className="text-lg px-8 py-6">
+            <Button 
+              variant="hero" 
+              size="lg" 
+              className="text-lg px-8 py-6"
+              onClick={() => {
+                document.getElementById('opportunities')?.scrollIntoView({ 
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              }}
+            >
               Find Opportunities
             </Button>
-            <Button variant="community" size="lg" className="text-lg px-8 py-6">
+            <Button 
+              variant="community" 
+              size="lg" 
+              className="text-lg px-8 py-6"
+              onClick={() => {
+                // For now, scroll to opportunities. Later can be a dedicated org signup page
+                document.getElementById('opportunities')?.scrollIntoView({ 
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              }}
+            >
               Join as Organization
             </Button>
           </div>

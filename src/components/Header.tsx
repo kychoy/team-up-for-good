@@ -16,18 +16,30 @@ const Header = () => {
           
           {/* Navigation - Desktop */}
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#opportunities" className="text-foreground hover:text-primary transition-colors">
+            <button 
+              onClick={() => document.getElementById('opportunities')?.scrollIntoView({ behavior: 'smooth' })}
+              className="text-foreground hover:text-primary transition-colors"
+            >
               Browse Opportunities
-            </a>
-            <a href="#organizations" className="text-foreground hover:text-primary transition-colors">
+            </button>
+            <button 
+              onClick={() => document.getElementById('opportunities')?.scrollIntoView({ behavior: 'smooth' })}
+              className="text-foreground hover:text-primary transition-colors"
+            >
               Organizations
-            </a>
-            <a href="#about" className="text-foreground hover:text-primary transition-colors">
+            </button>
+            <button 
+              onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+              className="text-foreground hover:text-primary transition-colors"
+            >
               How It Works
-            </a>
-            <a href="#contact" className="text-foreground hover:text-primary transition-colors">
+            </button>
+            <button 
+              onClick={() => document.getElementById('opportunities')?.scrollIntoView({ behavior: 'smooth' })}
+              className="text-foreground hover:text-primary transition-colors"
+            >
               Contact
-            </a>
+            </button>
           </nav>
           
           {/* Actions */}
@@ -36,7 +48,11 @@ const Header = () => {
               <User className="w-4 h-4 mr-2" />
               Sign In
             </Button>
-            <Button variant="default" size="sm">
+            <Button 
+              variant="default" 
+              size="sm"
+              onClick={() => document.getElementById('opportunities')?.scrollIntoView({ behavior: 'smooth' })}
+            >
               Get Started
             </Button>
             
