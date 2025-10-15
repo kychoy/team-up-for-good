@@ -98,6 +98,14 @@ const Dashboard = () => {
               <User className="w-5 h-5" />
               <span className="text-sm">{user?.email}</span>
             </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/profile")}
+            >
+              <User className="w-4 h-4 mr-2" />
+              Profile
+            </Button>
             <Button variant="outline" size="sm" onClick={handleSignOut}>
               <LogOut className="w-4 h-4 mr-2" />
               Sign Out

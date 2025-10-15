@@ -22,8 +22,10 @@ const Auth = () => {
     const email = formData.get("signup-email") as string;
     const password = formData.get("signup-password") as string;
     const fullName = formData.get("full-name") as string;
+    const phoneNumber = formData.get("phone-number") as string;
+    const notificationMethod = formData.get("notification-method") as string;
 
-    const { error } = await supabase.auth.signUp({
+    const { data: authData, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -31,6 +33,21 @@ const Auth = () => {
         emailRedirectTo: `${window.location.origin}/dashboard`,
       },
     });
+
+    if (!error && authData.user) {
+      // Update profile with additional details
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({
+          phone_number: phoneNumber || null,
+          notification_method: notificationMethod || 'email',
+        })
+        .eq("id", authData.user.id);
+
+      if (profileError) {
+        console.error("Profile update error:", profileError);
+      }
+    }
 
     setLoading(false);
 
@@ -150,6 +167,28 @@ const Auth = () => {
                     required
                     minLength={6}
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone-number">Phone Number</Label>
+                  <Input
+                    id="phone-number"
+                    name="phone-number"
+                    type="tel"
+                    placeholder="+1234567890"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="notification-method">Preferred Alert Method</Label>
+                  <select
+                    id="notification-method"
+                    name="notification-method"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    defaultValue="email"
+                  >
+                    <option value="email">Email</option>
+                    <option value="sms">SMS</option>
+                    <option value="voice">Voice Call</option>
+                  </select>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Creating account..." : "Create Account"}
