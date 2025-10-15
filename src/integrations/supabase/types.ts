@@ -14,7 +14,208 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      activity_logs: {
+        Row: {
+          activity_type: string
+          created_at: string
+          elderly_profile_id: string
+          id: string
+          logged_by: string | null
+          notes: string | null
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string
+          elderly_profile_id: string
+          id?: string
+          logged_by?: string | null
+          notes?: string | null
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string
+          elderly_profile_id?: string
+          id?: string
+          logged_by?: string | null
+          notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_logs_elderly_profile_id_fkey"
+            columns: ["elderly_profile_id"]
+            isOneToOne: false
+            referencedRelation: "elderly_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      alert_history: {
+        Row: {
+          acknowledged_at: string | null
+          alert_method: Database["public"]["Enums"]["alert_method"]
+          contact_id: string | null
+          created_at: string
+          elderly_profile_id: string
+          error_message: string | null
+          id: string
+          message: string
+          sent_at: string | null
+          status: Database["public"]["Enums"]["alert_status"]
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          alert_method: Database["public"]["Enums"]["alert_method"]
+          contact_id?: string | null
+          created_at?: string
+          elderly_profile_id: string
+          error_message?: string | null
+          id?: string
+          message: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["alert_status"]
+        }
+        Update: {
+          acknowledged_at?: string | null
+          alert_method?: Database["public"]["Enums"]["alert_method"]
+          contact_id?: string | null
+          created_at?: string
+          elderly_profile_id?: string
+          error_message?: string | null
+          id?: string
+          message?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["alert_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alert_history_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alert_history_elderly_profile_id_fkey"
+            columns: ["elderly_profile_id"]
+            isOneToOne: false
+            referencedRelation: "elderly_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contacts: {
+        Row: {
+          created_at: string
+          elderly_profile_id: string
+          email: string | null
+          full_name: string
+          id: string
+          is_primary: boolean
+          phone: string | null
+          preferred_alert_method: Database["public"]["Enums"]["alert_method"]
+          relationship: string | null
+        }
+        Insert: {
+          created_at?: string
+          elderly_profile_id: string
+          email?: string | null
+          full_name: string
+          id?: string
+          is_primary?: boolean
+          phone?: string | null
+          preferred_alert_method?: Database["public"]["Enums"]["alert_method"]
+          relationship?: string | null
+        }
+        Update: {
+          created_at?: string
+          elderly_profile_id?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          is_primary?: boolean
+          phone?: string | null
+          preferred_alert_method?: Database["public"]["Enums"]["alert_method"]
+          relationship?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contacts_elderly_profile_id_fkey"
+            columns: ["elderly_profile_id"]
+            isOneToOne: false
+            referencedRelation: "elderly_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      elderly_profiles: {
+        Row: {
+          address: string | null
+          age: number | null
+          caregiver_id: string
+          created_at: string
+          full_name: string
+          id: string
+          inactivity_threshold_hours: number
+          last_activity_at: string | null
+          medical_notes: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          age?: number | null
+          caregiver_id: string
+          created_at?: string
+          full_name: string
+          id?: string
+          inactivity_threshold_hours?: number
+          last_activity_at?: string | null
+          medical_notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          age?: number | null
+          caregiver_id?: string
+          created_at?: string
+          full_name?: string
+          id?: string
+          inactivity_threshold_hours?: number
+          last_activity_at?: string | null
+          medical_notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +224,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      alert_method: "email" | "sms" | "voice_call"
+      alert_status: "pending" | "sent" | "failed" | "acknowledged"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +352,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      alert_method: ["email", "sms", "voice_call"],
+      alert_status: ["pending", "sent", "failed", "acknowledged"],
+    },
   },
 } as const
