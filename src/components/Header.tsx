@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Heart, Menu, User } from "lucide-react";
+import { Menu, User } from "lucide-react";
+import psaLogo from "@/assets/psa-logo.jpeg";
 
 const Header = () => {
   return (
@@ -7,11 +8,9 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center">
-              <Heart className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl font-bold text-primary">VolunteerConnect</span>
+          <div className="flex items-center gap-3">
+            <img src={psaLogo} alt="PSA Logo" className="w-12 h-12 object-contain" />
+            <span className="text-xl font-bold text-primary">PSA System</span>
           </div>
           
           {/* Navigation - Desktop */}

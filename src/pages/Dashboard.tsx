@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Plus, User, LogOut, Activity, AlertCircle, Clock, Smartphone } from "lucide-react";
 import { AddElderlyDialog } from "@/components/dashboard/AddElderlyDialog";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
+import psaLogo from "@/assets/psa-logo.jpeg";
 
 interface ElderlyProfile {
   id: string;
@@ -89,8 +90,8 @@ const Dashboard = () => {
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Activity className="w-6 h-6 text-primary" />
+          <div className="flex items-center gap-3">
+            <img src={psaLogo} alt="PSA Logo" className="w-10 h-10 object-contain" />
             <h1 className="text-xl font-bold">Prolonged Stay Alert</h1>
           </div>
           <div className="flex items-center gap-4">
