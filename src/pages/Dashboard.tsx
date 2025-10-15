@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, User, LogOut, Activity, AlertCircle, Clock } from "lucide-react";
+import { Plus, User, LogOut, Activity, AlertCircle, Clock, Smartphone } from "lucide-react";
 import { AddElderlyDialog } from "@/components/dashboard/AddElderlyDialog";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
@@ -98,6 +98,14 @@ const Dashboard = () => {
               <User className="w-5 h-5" />
               <span className="text-sm">{user?.email}</span>
             </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/devices")}
+            >
+              <Smartphone className="w-4 h-4 mr-2" />
+              Devices
+            </Button>
             <Button
               variant="ghost"
               size="sm"
