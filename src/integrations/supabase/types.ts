@@ -147,12 +147,52 @@ export type Database = {
           },
         ]
       }
+      device_activity: {
+        Row: {
+          created_at: string
+          device_id: string | null
+          elderly_profile_id: string
+          id: string
+          received_at: string
+          sms_body: string | null
+          sms_from: string | null
+        }
+        Insert: {
+          created_at?: string
+          device_id?: string | null
+          elderly_profile_id: string
+          id?: string
+          received_at?: string
+          sms_body?: string | null
+          sms_from?: string | null
+        }
+        Update: {
+          created_at?: string
+          device_id?: string | null
+          elderly_profile_id?: string
+          id?: string
+          received_at?: string
+          sms_body?: string | null
+          sms_from?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "device_activity_elderly_profile_id_fkey"
+            columns: ["elderly_profile_id"]
+            isOneToOne: false
+            referencedRelation: "elderly_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       elderly_profiles: {
         Row: {
           address: string | null
           age: number | null
           caregiver_id: string
           created_at: string
+          device_id: string | null
+          device_phone_number: string | null
           full_name: string
           id: string
           inactivity_threshold_hours: number
@@ -166,6 +206,8 @@ export type Database = {
           age?: number | null
           caregiver_id: string
           created_at?: string
+          device_id?: string | null
+          device_phone_number?: string | null
           full_name: string
           id?: string
           inactivity_threshold_hours?: number
@@ -179,6 +221,8 @@ export type Database = {
           age?: number | null
           caregiver_id?: string
           created_at?: string
+          device_id?: string | null
+          device_phone_number?: string | null
           full_name?: string
           id?: string
           inactivity_threshold_hours?: number
@@ -195,7 +239,8 @@ export type Database = {
           email: string
           full_name: string
           id: string
-          phone: string | null
+          notification_method: string | null
+          phone_number: string | null
           updated_at: string
         }
         Insert: {
@@ -203,7 +248,8 @@ export type Database = {
           email: string
           full_name: string
           id: string
-          phone?: string | null
+          notification_method?: string | null
+          phone_number?: string | null
           updated_at?: string
         }
         Update: {
@@ -211,8 +257,30 @@ export type Database = {
           email?: string
           full_name?: string
           id?: string
-          phone?: string | null
+          notification_method?: string | null
+          phone_number?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -221,11 +289,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       alert_method: "email" | "sms" | "voice_call"
       alert_status: "pending" | "sent" | "failed" | "acknowledged"
+      app_role: "admin" | "caregiver" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -355,6 +430,7 @@ export const Constants = {
     Enums: {
       alert_method: ["email", "sms", "voice_call"],
       alert_status: ["pending", "sent", "failed", "acknowledged"],
+      app_role: ["admin", "caregiver", "user"],
     },
   },
 } as const
