@@ -1,156 +1,159 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 
 interface AddElderlyDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }
 
-export const AddElderlyDialog = ({ open, onOpenChange, onSuccess }: AddElderlyDialogProps) => {
+export function AddElderlyDialog({ open, onOpenChange, onSuccess }: AddElderlyDialogProps) {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const [formData, setFormData] = useState({
+    full_name: "",
+    age: "",
+    address: "",
+    medical_notes: "",
+    inactivity_threshold_hours: "24",
+  });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      full_name: formData.get("full_name") as string,
-      age: parseInt(formData.get("age") as string) || null,
-      address: formData.get("address") as string || null,
-      medical_notes: formData.get("medical_notes") as string || null,
-      inactivity_threshold_hours: parseInt(formData.get("threshold") as string) || 24,
-    };
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+      const { error } = await supabase.from("elderly_profiles").insert({
+        caregiver_id: user.id,
+        full_name: formData.full_name,
+        age: formData.age ? parseInt(formData.age) : null,
+        address: formData.address || null,
+        medical_notes: formData.medical_notes || null,
+        inactivity_threshold_hours: parseInt(formData.inactivity_threshold_hours),
+        last_activity_at: new Date().toISOString(),
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: `${formData.full_name} has been added to monitoring`,
+      });
+
+      setFormData({
+        full_name: "",
+        age: "",
+        address: "",
+        medical_notes: "",
+        inactivity_threshold_hours: "24",
+      });
+      onOpenChange(false);
+      onSuccess?.();
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "You must be logged in to add profiles",
-      });
-      setLoading(false);
-      return;
-    }
-
-    const { error } = await supabase.from("elderly_profiles").insert({
-      ...data,
-      caregiver_id: user.id,
-    });
-
-    setLoading(false);
-
-    if (error) {
-      toast({
-        variant: "destructive",
-        title: "Error adding profile",
         description: error.message,
       });
-    } else {
-      toast({
-        title: "Profile added successfully",
-        description: `${data.full_name} is now being monitored`,
-      });
-      onOpenChange(false);
-      onSuccess();
-      (e.target as HTMLFormElement).reset();
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Add Elderly Profile</DialogTitle>
+          <DialogTitle>Add Elderly Individual</DialogTitle>
           <DialogDescription>
-            Add a new person to monitor for inactivity alerts
+            Add a new person to monitor for prolonged inactivity
           </DialogDescription>
         </DialogHeader>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="full_name">Full Name *</Label>
             <Input
               id="full_name"
-              name="full_name"
-              required
+              value={formData.full_name}
+              onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
               placeholder="John Doe"
+              required
             />
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="age">Age</Label>
-            <Input
-              id="age"
-              name="age"
-              type="number"
-              min="1"
-              max="150"
-              placeholder="75"
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="age">Age</Label>
+              <Input
+                id="age"
+                type="number"
+                value={formData.age}
+                onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                placeholder="75"
+                min="1"
+                max="150"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="inactivity_threshold">Alert After (hours) *</Label>
+              <Input
+                id="inactivity_threshold"
+                type="number"
+                value={formData.inactivity_threshold_hours}
+                onChange={(e) =>
+                  setFormData({ ...formData, inactivity_threshold_hours: e.target.value })
+                }
+                placeholder="24"
+                required
+                min="1"
+                max="168"
+              />
+            </div>
           </div>
-
           <div className="space-y-2">
             <Label htmlFor="address">Address</Label>
             <Input
               id="address"
-              name="address"
-              placeholder="123 Main St, City"
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              placeholder="123 Main St, City, State"
             />
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="threshold">Inactivity Alert Threshold (hours) *</Label>
-            <Input
-              id="threshold"
-              name="threshold"
-              type="number"
-              min="1"
-              required
-              defaultValue="24"
-              placeholder="24"
-            />
-          </div>
-
           <div className="space-y-2">
             <Label htmlFor="medical_notes">Medical Notes</Label>
             <Textarea
               id="medical_notes"
-              name="medical_notes"
-              placeholder="Any important medical information..."
+              value={formData.medical_notes}
+              onChange={(e) => setFormData({ ...formData, medical_notes: e.target.value })}
+              placeholder="Any important medical information or conditions..."
               rows={3}
             />
           </div>
-
-          <div className="flex gap-3 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              className="flex-1"
-            >
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={loading} className="flex-1">
-              {loading ? "Adding..." : "Add Profile"}
+            <Button type="submit" disabled={loading}>
+              {loading ? "Adding..." : "Add Individual"}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
   );
-};
+}
