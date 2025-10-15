@@ -105,6 +105,7 @@ export type Database = {
       }
       contacts: {
         Row: {
+          alert_methods: Database["public"]["Enums"]["alert_method"][]
           created_at: string
           elderly_profile_id: string
           email: string | null
@@ -112,10 +113,10 @@ export type Database = {
           id: string
           is_primary: boolean
           phone: string | null
-          preferred_alert_method: Database["public"]["Enums"]["alert_method"]
           relationship: string | null
         }
         Insert: {
+          alert_methods?: Database["public"]["Enums"]["alert_method"][]
           created_at?: string
           elderly_profile_id: string
           email?: string | null
@@ -123,10 +124,10 @@ export type Database = {
           id?: string
           is_primary?: boolean
           phone?: string | null
-          preferred_alert_method?: Database["public"]["Enums"]["alert_method"]
           relationship?: string | null
         }
         Update: {
+          alert_methods?: Database["public"]["Enums"]["alert_method"][]
           created_at?: string
           elderly_profile_id?: string
           email?: string | null
@@ -134,7 +135,6 @@ export type Database = {
           id?: string
           is_primary?: boolean
           phone?: string | null
-          preferred_alert_method?: Database["public"]["Enums"]["alert_method"]
           relationship?: string | null
         }
         Relationships: [

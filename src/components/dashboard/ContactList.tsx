@@ -23,7 +23,7 @@ interface Contact {
   relationship: string | null;
   email: string | null;
   phone: string | null;
-  preferred_alert_method: "email" | "sms" | "voice_call";
+  alert_methods: string[];
   is_primary: boolean;
 }
 
@@ -190,11 +190,14 @@ export default function ContactList({ elderlyProfileId }: ContactListProps) {
                         {contact.phone}
                       </div>
                     )}
-                    <div className="flex items-center gap-2">
-                      {getAlertMethodIcon(contact.preferred_alert_method)}
-                      <span className="capitalize">
-                        Preferred: {contact.preferred_alert_method.replace("_", " ")}
-                      </span>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-medium">Alert methods:</span>
+                      {contact.alert_methods?.map((method) => (
+                        <Badge key={method} variant="outline" className="gap-1">
+                          {getAlertMethodIcon(method)}
+                          <span className="capitalize">{method.replace("_", " ")}</span>
+                        </Badge>
+                      ))}
                     </div>
                   </div>
                 </div>

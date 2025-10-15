@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface Contact {
   id: string;
@@ -26,7 +27,7 @@ interface Contact {
   relationship: string | null;
   email: string | null;
   phone: string | null;
-  preferred_alert_method: "email" | "sms" | "voice_call";
+  alert_methods: string[];
   is_primary: boolean;
 }
 
@@ -49,7 +50,7 @@ export function AddContactDialog({
     relationship: "",
     email: "",
     phone: "",
-    preferred_alert_method: "email" as "email" | "sms" | "voice_call",
+    alert_methods: ["email"] as string[],
     is_primary: false,
   });
 
@@ -60,7 +61,7 @@ export function AddContactDialog({
         relationship: contact.relationship || "",
         email: contact.email || "",
         phone: contact.phone || "",
-        preferred_alert_method: contact.preferred_alert_method,
+        alert_methods: contact.alert_methods || ["email"],
         is_primary: contact.is_primary,
       });
     } else {
@@ -69,7 +70,7 @@ export function AddContactDialog({
         relationship: "",
         email: "",
         phone: "",
-        preferred_alert_method: "email",
+        alert_methods: ["email"],
         is_primary: false,
       });
     }
@@ -88,12 +89,16 @@ export function AddContactDialog({
         throw new Error("Please provide at least email or phone number");
       }
 
+      if (formData.alert_methods.length === 0) {
+        throw new Error("Please select at least one alert method");
+      }
+
       const contactData = {
         full_name: formData.full_name.trim(),
         relationship: formData.relationship.trim() || null,
         email: formData.email.trim() || null,
         phone: formData.phone.trim() || null,
-        preferred_alert_method: formData.preferred_alert_method,
+        alert_methods: formData.alert_methods as ("email" | "sms" | "voice_call")[],
         is_primary: formData.is_primary,
         elderly_profile_id: elderlyProfileId,
       };
@@ -196,23 +201,67 @@ export function AddContactDialog({
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="preferred_alert_method">Preferred Alert Method</Label>
-            <Select
-              value={formData.preferred_alert_method}
-              onValueChange={(value: "email" | "sms" | "voice_call") =>
-                setFormData({ ...formData, preferred_alert_method: value })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="email">Email</SelectItem>
-                <SelectItem value="sms">SMS</SelectItem>
-                <SelectItem value="voice_call">Voice Call</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="space-y-3">
+            <Label>Alert Methods *</Label>
+            <p className="text-sm text-muted-foreground">
+              Select all methods to receive alerts
+            </p>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="email-method"
+                  checked={formData.alert_methods.includes("email")}
+                  onCheckedChange={(checked) => {
+                    const methods = checked
+                      ? [...formData.alert_methods, "email"]
+                      : formData.alert_methods.filter((m) => m !== "email");
+                    setFormData({ ...formData, alert_methods: methods });
+                  }}
+                />
+                <label
+                  htmlFor="email-method"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Email
+                </label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="sms-method"
+                  checked={formData.alert_methods.includes("sms")}
+                  onCheckedChange={(checked) => {
+                    const methods = checked
+                      ? [...formData.alert_methods, "sms"]
+                      : formData.alert_methods.filter((m) => m !== "sms");
+                    setFormData({ ...formData, alert_methods: methods });
+                  }}
+                />
+                <label
+                  htmlFor="sms-method"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  SMS
+                </label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="voice-method"
+                  checked={formData.alert_methods.includes("voice_call")}
+                  onCheckedChange={(checked) => {
+                    const methods = checked
+                      ? [...formData.alert_methods, "voice_call"]
+                      : formData.alert_methods.filter((m) => m !== "voice_call");
+                    setFormData({ ...formData, alert_methods: methods });
+                  }}
+                />
+                <label
+                  htmlFor="voice-method"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Voice Call
+                </label>
+              </div>
+            </div>
           </div>
 
           <div className="flex items-center justify-between space-x-2">
