@@ -29,6 +29,8 @@ export function AddElderlyDialog({ open, onOpenChange, onSuccess }: AddElderlyDi
     address: "",
     medical_notes: "",
     inactivity_threshold_hours: "24",
+    device_id: "",
+    device_phone_number: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,6 +49,8 @@ export function AddElderlyDialog({ open, onOpenChange, onSuccess }: AddElderlyDi
         medical_notes: formData.medical_notes || null,
         inactivity_threshold_hours: parseInt(formData.inactivity_threshold_hours),
         last_activity_at: new Date().toISOString(),
+        device_id: formData.device_id || null,
+        device_phone_number: formData.device_phone_number || null,
       });
 
       if (error) throw error;
@@ -62,6 +66,8 @@ export function AddElderlyDialog({ open, onOpenChange, onSuccess }: AddElderlyDi
         address: "",
         medical_notes: "",
         inactivity_threshold_hours: "24",
+        device_id: "",
+        device_phone_number: "",
       });
       onOpenChange(false);
       onSuccess?.();
@@ -142,6 +148,25 @@ export function AddElderlyDialog({ open, onOpenChange, onSuccess }: AddElderlyDi
               onChange={(e) => setFormData({ ...formData, medical_notes: e.target.value })}
               placeholder="Any important medical information or conditions..."
               rows={3}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="device_id">CP141 Device ID</Label>
+            <Input
+              id="device_id"
+              value={formData.device_id}
+              onChange={(e) => setFormData({ ...formData, device_id: e.target.value })}
+              placeholder="CP141-12345"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="device_phone_number">Device Phone Number</Label>
+            <Input
+              id="device_phone_number"
+              type="tel"
+              value={formData.device_phone_number}
+              onChange={(e) => setFormData({ ...formData, device_phone_number: e.target.value })}
+              placeholder="+1234567890"
             />
           </div>
           <DialogFooter>
