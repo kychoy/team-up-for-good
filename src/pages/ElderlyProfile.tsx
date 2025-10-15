@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Activity, Clock, User } from "lucide-react";
 import ContactList from "@/components/dashboard/ContactList";
+import AlertHistory from "@/components/dashboard/AlertHistory";
 
 interface ElderlyProfile {
   id: string;
@@ -156,6 +157,18 @@ const ElderlyProfile = () => {
             </CardHeader>
             <CardContent>
               <ContactList elderlyProfileId={profile.id} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Alert History</CardTitle>
+              <CardDescription>
+                View all alerts sent to emergency contacts
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AlertHistory elderlyProfileId={profile.id} />
             </CardContent>
           </Card>
         </div>
