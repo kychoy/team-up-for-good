@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Shield } from "lucide-react";
+import psaLogo from "@/assets/psa-logo.jpeg";
 
 const Auth = () => {
   const [loading, setLoading] = useState(false);
@@ -93,9 +93,7 @@ const Auth = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="p-3 rounded-full bg-primary/10">
-              <Shield className="w-8 h-8 text-primary" />
-            </div>
+            <img src={psaLogo} alt="PSA Logo" className="w-24 h-24 object-contain" />
           </div>
           <CardTitle className="text-2xl">Prolonged Stay Alert</CardTitle>
           <CardDescription>Monitor and protect your loved ones</CardDescription>
