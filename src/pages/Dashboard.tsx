@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, User, LogOut, Activity, AlertCircle, Clock, Smartphone } from "lucide-react";
+import { Plus, User, LogOut, Activity, AlertCircle, Clock, Smartphone, Menu } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { AddElderlyDialog } from "@/components/dashboard/AddElderlyDialog";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import psaLogo from "@/assets/psa-logo.jpeg";
@@ -23,6 +24,7 @@ const Dashboard = () => {
   const [profiles, setProfiles] = useState<ElderlyProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -89,49 +91,108 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src={psaLogo} alt="PSA Logo" className="w-10 h-10 object-contain" />
-            <h1 className="text-xl font-bold">Prolonged Stay Alert</h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <User className="w-5 h-5" />
-              <span className="text-sm">{user?.email}</span>
+        <div className="container mx-auto px-4 py-3 md:py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 md:gap-3">
+              <img src={psaLogo} alt="PSA Logo" className="w-8 h-8 md:w-10 md:h-10 object-contain" />
+              <h1 className="text-base md:text-xl font-bold truncate">Prolonged Stay Alert</h1>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/devices")}
-            >
-              <Smartphone className="w-4 h-4 mr-2" />
-              Devices
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/profile")}
-            >
-              <User className="w-4 h-4 mr-2" />
-              Profile
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleSignOut}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
-            </Button>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <User className="w-5 h-5" />
+                <span className="text-sm">{user?.email}</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate("/devices")}
+              >
+                <Smartphone className="w-4 h-4 mr-2" />
+                Devices
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate("/profile")}
+              >
+                <User className="w-4 h-4 mr-2" />
+                Profile
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleSignOut}>
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
+            </div>
+
+            {/* Mobile Menu */}
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden">
+                  <Menu className="w-5 h-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[280px]">
+                <div className="flex flex-col gap-6 mt-8">
+                  <div className="pb-4 border-b">
+                    <div className="flex items-center gap-2 text-sm">
+                      <User className="w-4 h-4" />
+                      <span className="truncate">{user?.email}</span>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="lg"
+                    className="justify-start"
+                    onClick={() => {
+                      navigate("/devices");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    <Smartphone className="w-4 h-4 mr-2" />
+                    Devices
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="lg"
+                    className="justify-start"
+                    onClick={() => {
+                      navigate("/profile");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    Profile
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="justify-start"
+                    onClick={() => {
+                      handleSignOut();
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
+      <main className="container mx-auto px-4 py-6 md:py-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 md:mb-8">
           <div>
-            <h2 className="text-3xl font-bold">Monitored Individuals</h2>
-            <p className="text-muted-foreground mt-1">
+            <h2 className="text-2xl md:text-3xl font-bold">Monitored Individuals</h2>
+            <p className="text-sm md:text-base text-muted-foreground mt-1">
               Manage and monitor elderly individuals for inactivity
             </p>
           </div>
-          <Button onClick={() => setShowAddDialog(true)}>
+          <Button onClick={() => setShowAddDialog(true)} className="w-full sm:w-auto">
             <Plus className="w-4 h-4 mr-2" />
             Add Person
           </Button>

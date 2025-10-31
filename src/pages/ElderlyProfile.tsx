@@ -86,22 +86,22 @@ const ElderlyProfile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto p-4 md:p-6">
         <Button
           variant="ghost"
           onClick={() => navigate("/dashboard")}
-          className="mb-6"
+          className="mb-4 md:mb-6"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Dashboard
         </Button>
 
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           <Card>
             <CardHeader>
-              <div className="flex items-start justify-between">
+              <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                 <div>
-                  <CardTitle className="text-2xl">{profile.full_name}</CardTitle>
+                  <CardTitle className="text-xl md:text-2xl">{profile.full_name}</CardTitle>
                   <CardDescription>
                     {profile.age ? `${profile.age} years old` : "Age not specified"}
                   </CardDescription>
@@ -150,7 +150,7 @@ const ElderlyProfile = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Emergency Contacts</CardTitle>
+              <CardTitle className="text-lg md:text-xl">Emergency Contacts</CardTitle>
               <CardDescription>
                 Manage contacts who will be alerted if prolonged inactivity is detected
               </CardDescription>
@@ -162,7 +162,7 @@ const ElderlyProfile = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Alert History</CardTitle>
+              <CardTitle className="text-lg md:text-xl">Alert History</CardTitle>
               <CardDescription>
                 View all alerts sent to emergency contacts
               </CardDescription>
