@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, User, LogOut, Activity, AlertCircle, Clock, Smartphone, Menu } from "lucide-react";
+import { Plus, User, LogOut, Activity, AlertCircle, Clock, Smartphone, Menu, Crown } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { AddElderlyDialog } from "@/components/dashboard/AddElderlyDialog";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -115,6 +115,14 @@ const Dashboard = () => {
               <Button
                 variant="ghost"
                 size="sm"
+                onClick={() => navigate("/subscription")}
+              >
+                <Crown className="w-4 h-4 mr-2" />
+                Subscription
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => navigate("/profile")}
               >
                 <User className="w-4 h-4 mr-2" />
@@ -152,6 +160,18 @@ const Dashboard = () => {
                   >
                     <Smartphone className="w-4 h-4 mr-2" />
                     Devices
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="lg"
+                    className="justify-start"
+                    onClick={() => {
+                      navigate("/subscription");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    <Crown className="w-4 h-4 mr-2" />
+                    Subscription
                   </Button>
                   <Button
                     variant="ghost"

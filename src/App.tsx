@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import ProfileSettings from "./pages/ProfileSettings";
 import Devices from "./pages/Devices";
 import ElderlyProfile from "./pages/ElderlyProfile";
+import Subscription from "./pages/Subscription";
 import NotFound from "./pages/NotFound";
 import { Navigate } from "react-router-dom";
 
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/profile" element={<ProfileSettings />} />
           <Route path="/profile/:id" element={<ElderlyProfile />} />
           <Route path="/devices" element={<Devices />} />
+          <Route path="/subscription" element={<Subscription />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
